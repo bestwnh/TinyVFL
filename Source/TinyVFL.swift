@@ -23,6 +23,63 @@ public struct VFL {
         self.direction = direction
         self.items = items
         self.options = options
+        validateItems()
+        validateOptions()
+    }
+    
+    private func validateItems() {
+        if items.dropFirst().dropLast().contains(where: {
+            if case VFLItem.Content.superView = $0.content { return true } else { return false }
+        }) {
+            preconditionFailure("Super view should only at the start or end.")
+        }
+        
+        if [items.first, items.last].compactMap({ $0 }).contains(where: {
+            if case VFLItem.Content.space = $0.content { return true } else { return false }
+        }) {
+            preconditionFailure("Space should not at the start or end.")
+        }
+        
+        for (index, item) in items.enumerated() {
+            guard index > 0 else { continue }
+            switch (items[index-1].content, item.content) {
+            case (.space, .space):
+                preconditionFailure("Should not have two continue spaces.")
+            default:
+                break
+            }
+        }
+    }
+    
+    private func validateOptions() {
+        let validOptions: NSLayoutConstraint.FormatOptions = {
+            switch direction {
+            case .horizontal:
+                return [
+                    .alignAllTop,
+                    .alignAllBottom,
+                    .alignAllCenterY,
+                    .alignAllLastBaseline,
+                    .alignAllFirstBaseline,
+                    .directionLeadingToTrailing,
+                ]
+            case .vertical:
+                var opt: NSLayoutConstraint.FormatOptions = [
+                    .alignAllLeft,
+                    .alignAllRight,
+                    .alignAllLeading,
+                    .alignAllTrailing,
+                    .alignAllCenterX,
+                    ]
+                if #available(iOS 11.0, *) {
+                    opt.insert(.spacingBaselineToBaseline)
+                }
+                return opt
+            }
+        }()
+        if !options.isSubset(of: validOptions) {
+            preconditionFailure("NSLayoutConstraint.FormatOptions set in wrong direction.")
+        }
     }
 }
 
@@ -52,7 +109,7 @@ public extension VFL {
         return VFL(direction: direction, items: items, options:options)
     }
     func active() {
-        NSLayoutConstraint.activate(self.constraints)
+        NSLayoutConstraint.activate(constraints)
     }
     
     var constraints: [NSLayoutConstraint] {
@@ -123,12 +180,11 @@ extension VFLItem {
             return "(\(space)@\(priority))"
         }
         var vflSpaceString: String {
-            let sizeString = self.vflSizeString
-            guard sizeString != "" else {
+            guard vflSizeString != "" else {
                 return "-"
             }
             
-            return "-\(sizeString)-"
+            return "-\(vflSizeString)-"
         }
     }
 }
