@@ -6,7 +6,13 @@
 //  Copyright © 2019 @GalvinLi. All rights reserved.
 //
 
+#if canImport(AppKit)
+import AppKit
+public typealias VFLView = NSView
+#elseif canImport(UIKit)
 import UIKit
+public typealias VFLView = UIView
+#endif
 
 public struct VFL {
     let direction: Direction
@@ -57,7 +63,7 @@ public extension VFL {
     }
 }
 
-extension UIView {
+extension VFLView {
     var vflName: String {
         return "view\(hashValue)"
     }
@@ -69,7 +75,7 @@ public struct VFLItem {
 
 extension VFLItem {
     enum Content {
-        case view(UIView, size: Size?)
+        case view(VFLView, size: Size?)
         case superView
         case space(Space)
     }
@@ -77,12 +83,12 @@ extension VFLItem {
         let content: Content
         enum Content {
             case size(Space)
-            case sizeEqual(UIView, priority: Double?)
+            case sizeEqual(VFLView, priority: Double?)
         }
         static func size(_ size: Double, priority: Double? = nil) -> Size {
             return .init(content: Content.size(.space(size, priority: priority)))
         }
-        static func size(equal view: UIView, priority: Double? = nil) -> Size {
+        static func size(equal view: VFLView, priority: Double? = nil) -> Size {
             return .init(content: Content.sizeEqual(view, priority: priority))
         }
         var string: String {
@@ -131,7 +137,7 @@ public extension VFLItem {
     static var superView: VFLItem {
         return .init(content: Content.superView)
     }
-    static func view(_ view: UIView, size: Double? = nil) -> VFLItem {
+    static func view(_ view: VFLView, size: Double? = nil) -> VFLItem {
         let viewSize: Size? = {
             if let size = size {
                 return .size(size)
@@ -141,10 +147,10 @@ public extension VFLItem {
         }()
         return .init(content: Content.view(view, size: viewSize))
     }
-    static func view(_ view: UIView, size: Double, priority: Double? = nil) -> VFLItem {
+    static func view(_ view: VFLView, size: Double, priority: Double? = nil) -> VFLItem {
         return .init(content: Content.view(view, size: .size(size, priority: priority)))
     }
-    static func view(_ view: UIView, equal equalView: UIView, priority: Double? = nil) -> VFLItem {
+    static func view(_ view: VFLView, equal equalView: VFLView, priority: Double? = nil) -> VFLItem {
         return .init(content: Content.view(view, size: .size(equal: equalView, priority: priority)))
     }
     static func space(_ space: Double? = nil) -> VFLItem {
@@ -158,13 +164,13 @@ public extension VFLItem {
     static var bottom: VFLItem { return .superView }
     static var left: VFLItem { return .superView }
     static var right: VFLItem { return .superView }
-    static func v(_ view: UIView, _ size: Double? = nil) -> VFLItem {
+    static func v(_ view: VFLView, _ size: Double? = nil) -> VFLItem {
         return .view(view, size: size)
     }
-    static func v(_ view: UIView, _ size: Double, p priority: Double? = nil) -> VFLItem {
+    static func v(_ view: VFLView, _ size: Double, p priority: Double? = nil) -> VFLItem {
         return .view(view, size: size, priority: priority)
     }
-    static func v(_ view: UIView, e equalView: UIView, p priority: Double? = nil) -> VFLItem {
+    static func v(_ view: VFLView, e equalView: VFLView, p priority: Double? = nil) -> VFLItem {
         return .view(view, equal: equalView, priority: priority)
     }
     static func s(_ space: Double? = nil) -> VFLItem {
@@ -186,7 +192,7 @@ public extension VFLItem {
             return space.vflSpaceString
         }
     }
-    var view: UIView? {
+    var view: VFLView? {
         switch content {
         case let .view(view, _):
             return view
