@@ -53,7 +53,6 @@ public extension VFL {
         let views = Dictionary(uniqueKeysWithValues: items.compactMap{ $0.view }.map({ ("view\($0.hashValue)", $0) }))
         
         let format = "\(direction.string)\(items.map({ $0.string }).joined())"
-        print(format)
         return NSLayoutConstraint.constraints(withVisualFormat: format, options: options, metrics: nil, views: views)
     }
 }
@@ -74,7 +73,7 @@ extension VFLItem {
         case superView
         case space(Space)
     }
-    public struct Size {
+    struct Size {
         let content: Content
         enum Content {
             case size(Space)
@@ -129,11 +128,24 @@ extension VFLItem {
 }
 
 public extension VFLItem {
-    static func view(_ view: UIView, _ size: Size? = nil) -> VFLItem {
-        return .init(content: Content.view(view, size: size))
-    }
     static var superView: VFLItem {
         return .init(content: Content.superView)
+    }
+    static func view(_ view: UIView, size: Double? = nil) -> VFLItem {
+        let viewSize: Size? = {
+            if let size = size {
+                return .size(size)
+            } else {
+                return nil
+            }
+        }()
+        return .init(content: Content.view(view, size: viewSize))
+    }
+    static func view(_ view: UIView, size: Double, priority: Double? = nil) -> VFLItem {
+        return .init(content: Content.view(view, size: .size(size, priority: priority)))
+    }
+    static func view(_ view: UIView, equal equalView: UIView, priority: Double? = nil) -> VFLItem {
+        return .init(content: Content.view(view, size: .size(equal: equalView, priority: priority)))
     }
     static func space(_ space: Double? = nil) -> VFLItem {
         return .init(content: Content.space(.space(space)))
