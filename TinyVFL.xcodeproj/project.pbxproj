@@ -12,6 +12,7 @@
 		3AE398D721F1A3E30040879A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3AE398D521F1A3E30040879A /* Main.storyboard */; };
 		3AE398D921F1A3E40040879A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3AE398D821F1A3E40040879A /* Assets.xcassets */; };
 		3AE398DC21F1A3E40040879A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3AE398DA21F1A3E40040879A /* LaunchScreen.storyboard */; };
+		3AE398E521F1A7F60040879A /* TinyVFL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE398E421F1A7F60040879A /* TinyVFL.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		3AE398D821F1A3E40040879A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3AE398DB21F1A3E40040879A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3AE398DD21F1A3E40040879A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3AE398E421F1A7F60040879A /* TinyVFL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TinyVFL.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +56,7 @@
 		3AE398D021F1A3E30040879A /* TinyVFL */ = {
 			isa = PBXGroup;
 			children = (
+				3AE398E321F1A7AD0040879A /* Source */,
 				3AE398D121F1A3E30040879A /* AppDelegate.swift */,
 				3AE398D321F1A3E30040879A /* ViewController.swift */,
 				3AE398D521F1A3E30040879A /* Main.storyboard */,
@@ -62,6 +65,15 @@
 				3AE398DD21F1A3E40040879A /* Info.plist */,
 			);
 			path = TinyVFL;
+			sourceTree = "<group>";
+		};
+		3AE398E321F1A7AD0040879A /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				3AE398E421F1A7F60040879A /* TinyVFL.swift */,
+			);
+			name = Source;
+			path = ../Source;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -136,6 +148,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3AE398D421F1A3E30040879A /* ViewController.swift in Sources */,
+				3AE398E521F1A7F60040879A /* TinyVFL.swift in Sources */,
 				3AE398D221F1A3E30040879A /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
