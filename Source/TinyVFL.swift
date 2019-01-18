@@ -154,6 +154,26 @@ public extension VFLItem {
         return .init(content: Content.space(.space(space, priority: priority)))
     }
     
+    static var top: VFLItem { return .superView }
+    static var bottom: VFLItem { return .superView }
+    static var left: VFLItem { return .superView }
+    static var right: VFLItem { return .superView }
+    static func v(_ view: UIView, _ size: Double? = nil) -> VFLItem {
+        return .view(view, size: size)
+    }
+    static func v(_ view: UIView, _ size: Double, p priority: Double? = nil) -> VFLItem {
+        return .view(view, size: size, priority: priority)
+    }
+    static func v(_ view: UIView, e equalView: UIView, p priority: Double? = nil) -> VFLItem {
+        return .view(view, equal: equalView, priority: priority)
+    }
+    static func s(_ space: Double? = nil) -> VFLItem {
+        return .space(space)
+    }
+    static func s(_ space: Double, p priority: Double? = nil) -> VFLItem {
+        return .space(space, priority: priority)
+    }
+    
     var string: String {
         switch content {
         case let .view(view, .none):
