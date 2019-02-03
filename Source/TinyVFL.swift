@@ -9,9 +9,11 @@
 #if canImport(AppKit)
 import AppKit
 public typealias VFLView = NSView
+public typealias LayoutPriority = NSLayoutConstraint.Priority
 #elseif canImport(UIKit)
 import UIKit
 public typealias VFLView = UIView
+public typealias LayoutPriority = UILayoutPriority
 #endif
 
 public struct VFL {
@@ -140,12 +142,12 @@ extension VFLItem {
         let content: Content
         enum Content {
             case size(Space)
-            case sizeEqual(VFLView, priority: Double?)
+            case sizeEqual(VFLView, priority: LayoutPriority?)
         }
-        static func size(_ size: Double, priority: Double? = nil) -> Size {
+        static func size(_ size: Double, priority: LayoutPriority? = nil) -> Size {
             return .init(content: Content.size(.space(size, priority: priority)))
         }
-        static func size(equal view: VFLView, priority: Double? = nil) -> Size {
+        static func size(equal view: VFLView, priority: LayoutPriority? = nil) -> Size {
             return .init(content: Content.sizeEqual(view, priority: priority))
         }
         var string: String {
@@ -155,14 +157,14 @@ extension VFLItem {
             case let .sizeEqual(view, .none):
                 return "(==\(view.vflName))"
             case let .sizeEqual(view, .some(priority)):
-                return "(==\(view.vflName)@\(priority))"
+                return "(==\(view.vflName)@\(priority.rawValue))"
             }
         }
     }
     struct Space {
         let space: Double?
-        let priority: Double?
-        static func space(_ space: Double, priority: Double? = nil) -> Space {
+        let priority: LayoutPriority?
+        static func space(_ space: Double, priority: LayoutPriority? = nil) -> Space {
             return .init(space: space, priority: priority)
         }
         static func space(_ space: Double?) -> Space {
@@ -177,7 +179,7 @@ extension VFLItem {
                 return "(\(space))"
             }
             
-            return "(\(space)@\(priority))"
+            return "(\(space)@\(priority.rawValue))"
         }
         var vflSpaceString: String {
             guard vflSizeString != "" else {
@@ -203,16 +205,16 @@ public extension VFLItem {
         }()
         return .init(content: Content.view(view, size: viewSize))
     }
-    static func view(_ view: VFLView, size: Double, priority: Double? = nil) -> VFLItem {
+    static func view(_ view: VFLView, size: Double, priority: LayoutPriority? = nil) -> VFLItem {
         return .init(content: Content.view(view, size: .size(size, priority: priority)))
     }
-    static func view(_ view: VFLView, equal equalView: VFLView, priority: Double? = nil) -> VFLItem {
+    static func view(_ view: VFLView, equal equalView: VFLView, priority: LayoutPriority? = nil) -> VFLItem {
         return .init(content: Content.view(view, size: .size(equal: equalView, priority: priority)))
     }
     static func space(_ space: Double? = nil) -> VFLItem {
         return .init(content: Content.space(.space(space)))
     }
-    static func space(_ space: Double, priority: Double? = nil) -> VFLItem {
+    static func space(_ space: Double, priority: LayoutPriority? = nil) -> VFLItem {
         return .init(content: Content.space(.space(space, priority: priority)))
     }
     
@@ -223,16 +225,16 @@ public extension VFLItem {
     static func v(_ view: VFLView, _ size: Double? = nil) -> VFLItem {
         return .view(view, size: size)
     }
-    static func v(_ view: VFLView, _ size: Double, p priority: Double? = nil) -> VFLItem {
+    static func v(_ view: VFLView, _ size: Double, p priority: LayoutPriority? = nil) -> VFLItem {
         return .view(view, size: size, priority: priority)
     }
-    static func v(_ view: VFLView, e equalView: VFLView, p priority: Double? = nil) -> VFLItem {
+    static func v(_ view: VFLView, e equalView: VFLView, p priority: LayoutPriority? = nil) -> VFLItem {
         return .view(view, equal: equalView, priority: priority)
     }
     static func s(_ space: Double? = nil) -> VFLItem {
         return .space(space)
     }
-    static func s(_ space: Double, p priority: Double? = nil) -> VFLItem {
+    static func s(_ space: Double, p priority: LayoutPriority? = nil) -> VFLItem {
         return .space(space, priority: priority)
     }
     
@@ -255,5 +257,14 @@ public extension VFLItem {
         default:
             return nil
         }
+    }
+}
+
+extension LayoutPriority: ExpressibleByFloatLiteral, ExpressibleByIntegerLiteral {
+    public init(floatLiteral value: Float) {
+        self.init(value)
+    }
+    public init(integerLiteral value: Int) {
+        self.init(Float(value))
     }
 }
