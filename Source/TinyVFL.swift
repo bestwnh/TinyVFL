@@ -73,9 +73,11 @@ public struct VFL {
                     .alignAllTrailing,
                     .alignAllCenterX,
                     ]
+                #if os(iOS)
                 if #available(iOS 11.0, *) {
                     opt.insert(.spacingBaselineToBaseline)
                 }
+                #endif
                 return opt
             }
         }()
